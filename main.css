@@ -75,7 +75,7 @@ header > h1 {
     text-align: center;
     display: grid;
     grid-template-columns: 250px 250px 250px;
-    grid-template-rows: 250px 250px 250px;
+    grid-template-rows: 250px;
     justify-content: center;
     gap: 30px;
 }
@@ -103,7 +103,7 @@ header > h1 {
 #action-message {
     text-align: center;
     color: white;
-    font-family: Asap, sans-serif;
+    font-family: monospace, sans-serif;
     font-weight: bold;
     font-size: 40px;
     margin-top: 20px;

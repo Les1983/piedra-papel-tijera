@@ -63,25 +63,39 @@ header > h1 {
 
 .result > p {
     text-align: center;
-    font-weight: bold;
-    font-family: asap, sans-serif;
+    font-family: monospace;
 }
 
-.Choices {
-    margin-top: 50px;
+.result > p > span {
+    display: block;
+}
+
+.choices {
+    margin-top: 20px;
     text-align: center;
+    display: grid;
+    grid-template-columns: 250px 250px 250px;
+    grid-template-rows: 250px 250px 250px;
+    justify-content: center;
+    gap: 30px;
 }
 
-.Choice {
+.choice {
     border: 4px solid white;
-    border-radius: 50%;
+    border-radius: 100%;
+    overflow: hidden;
     margin: 0 20px;
     padding: 20px;
-    display: inline-block;
+    width: 100%;
     transition: all 0.3s ease;
 }
 
-.Choice:hover{
+.choice img {
+    height: 100%;
+    width: auto;
+}
+
+.choice:hover{
     cursor: pointer;
     background: rgb(15, 15, 15);
 }

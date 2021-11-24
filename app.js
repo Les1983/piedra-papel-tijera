@@ -1,94 +1,101 @@
-let userScore = 0;
-let computerScore = 0;
-const userScore_span = document.getElementById("user-score");
-const computerScore_span = document.getElementById("computer-score");
-const scoreBoard_div = document.querySelector(".score-board");
-const result_p = document.querySelector(".result > p");
-const piedra_div = document.getElementById("piedra");
-const papel_div = document.getElementById("papel");
-const tijera_div = document.getElementById("tijera");
+let userPoints = 0;
+let computerPoints = 0;
+
+const CHOICE_ROCK = "piedra";
+const CHOICE_PAPER = "papel";
+const CHOICE_SCISSOR = "tijera";
+
+const userScore = document.getElementById("user-score");
+const computerScore = document.getElementById("computer-score");
+const result = document.querySelector(".result > p");
+const piedra = document.getElementById("piedra");
+const papel = document.getElementById("papel");
+const tijera = document.getElementById("tijera");
 
 function getComputerChoice() {
-    const choices = ["piedra", "papel", "tijera"];
-    const randomNumber = Math.floor(Math.random() *3);
-    return choices [randomNumber];
+    const choices = [CHOICE_ROCK, CHOICE_PAPER, CHOICE_SCISSOR];
+    const randomNumber = Math.floor(Math.random() * choices.length);
+    return choices[randomNumber];
 }
-function convertToWord(letter){
-    if (letter === "piedra") return "Piedra";
-    if (letter === "papel") return "Papel";
+
+function convertToWord(letter) {
+    if (letter === CHOICE_ROCK) return "Piedra";
+    if (letter === CHOICE_PAPER) return "Papel";
     return "Tijera";
-
 }
 
-function win (userChoice, computerChoice){
-    const smallUserWord = "user".fontsize(3).sub();
-    const smallCompWord = "comp".fontsize(3).sub();
-    const userChoice_div = document.getElementById(userChoice);
-    userScore++;
-    userScore_span.innerHTML = userScore;
-    computerScore_span.innerHTML= computerScore;
-    result_p.innerHTML = `${convertToWord(userChoice)}${smallUserWord} gana a ${convertToWord(computerChoice)}${smallCompWord} Ganaste! `;
-    userChoice_div.classList.add('green-glow');
-    setTimeout(() => userChoice_div.classList.remove('green-glow'), 300);
+function resultGlow(uChoice, glow = "grey-glow") {
+    const clickedDiv = document.getElementById(uChoice);
+    clickedDiv.classList.add(glow);
+    setTimeout(() => clickedDiv.classList.remove(glow), 300);
 }
 
+function resultMessage(uChoice, cChoice, result = "draw") {
+    let message;
+    switch(result) {
+        case "win":
+            message = "¡Ganaste 🎉!";
+            break;
+        case "lose":
+            message = "¡Perdiste 🤖!";
+            break;
+        case "draw":
+        default:
+            message = "Empate 🤦‍♂️";
+    }
 
-function lose (userChoice, computerChoice) {
-    const smallUserWord = "user".fontsize(3).sub();
-    const smallCompWord = "comp".fontsize(3).sub();
-    const userChoice_div = document.getElementById(userChoice);
-    userScore++;
-    userScore_span.innerHTML = userScore;
-    computerScore_span.innerHTML= computerScore;
-    result_p.innerHTML = `${convertToWord(userChoice)}${smallUserWord} pierde con ${convertToWord(computerChoice)}${smallCompWord} Perdiste! `;
-    userChoice_div.classList.add('red-glow');
-    setTimeout(() => userChoice_div.classList.remove('red-glow') , 300);
+    result.innerHTML = `
+        <span>😎 Usuario saca ${convertToWord(uChoice)}</span>
+        <span>🤖 Computadora saca ${convertToWord(cChoice)}</span>
+        <strong>${message}</strong>
+    `;
 }
 
-function draw (userChoice, computerChoice){
-    const smallUserWord = "user".fontsize(3).sub();
-    const smallCompWord = "comp".fontsize(3).sub();
-    const userChoice_div = document.getElementById(userChoice);
-    userScore++;
-    userScore_span.innerHTML = userScore;
-    computerScore_span.innerHTML= computerScore;
-    result_p.innerHTML = `${convertToWord(userChoice)}${smallUserWord} empata con ${convertToWord(computerChoice)}${smallCompWord} Empata! `;
-    userChoice_div.classList.add('grey-glow');
-    setTimeout(() => userChoice_div.classList.remove('grey-glow') , 300);
+function win(uChoice, cChoice) {
+    userPoints++;
+    userScore.innerHTML = userPoints;
+    resultMessage(uChoice, cChoice, "win");
+    resultGlow(uChoice, 'green-glow');
+}
+
+function lose (uChoice, cChoice) {
+    computerPoints++;
+    computerScore.innerHTML = computerPoints;
+    resultMessage(uChoice, cChoice, "lose");
+    resultGlow(uChoice, 'red-glow');
+}
+
+function draw(uChoice, cChoice) {
+    resultMessage(uChoice, cChoice);
+    resultGlow(uChoice);
 }
 
 function game(userChoice) {
     const computerChoice = getComputerChoice();
-    switch (userChoice + computerChoice) {
-case "piedratijera":
-case "papelpiedra":
-case "tijerapapel":
-win (userChoice, computerChoice);
-break;
-case "piedrapapel":
-case "papeltijera":
-case "tijerapiedra":
-lose(userChoice, computerChoice);
-    break;
-    case "piedrapiedra":
-    case "papelpapel":
-    case "tijeratijera":
-draw(userChoice, computerChoice);
-    break;
-
- }
+    const choices = userChoice + computerChoice;
+    switch (choices) {
+        case `${CHOICE_ROCK}${CHOICE_SCISSOR}`:
+        case `${CHOICE_PAPER}${CHOICE_ROCK}`:
+        case `${CHOICE_SCISSOR}${CHOICE_PAPER}`:
+            win(userChoice, computerChoice);
+            break;
+        case `${CHOICE_ROCK}${CHOICE_PAPER}`:
+        case `${CHOICE_PAPER}${CHOICE_SCISSOR}`:
+        case `${CHOICE_SCISSOR}${CHOICE_ROCK}`:
+            lose(userChoice, computerChoice);
+            break;
+        case `${CHOICE_ROCK}${CHOICE_ROCK}`:
+        case `${CHOICE_PAPER}${CHOICE_PAPER}`:
+        case `${CHOICE_SCISSOR}${CHOICE_SCISSOR}`:
+            draw(userChoice, computerChoice);
+            break;
+    }
 }
 
 function main() {
-    piedra_div.addEventListener ("click", function() {
-    game("piedra");
-    })
-    papel_div.addEventListener ("click", function() {
-    game("papel");
-    })
-    tijera_div.addEventListener ("click", function() {
-    game("tijera");
-    })
+    piedra.addEventListener("click", () => game(CHOICE_ROCK));
+    papel.addEventListener("click", () => game(CHOICE_PAPER));
+    tijera.addEventListener("click", () => game(CHOICE_SCISSOR));
 }
 
 main();
